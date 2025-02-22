@@ -2,9 +2,6 @@ import { generateLipSync } from "./sync.js";
 import { createVoiceFromMP4, deleteVoice } from "./voiceclone.js";
 
 export async function syncVideo(videoUrl, text) {
-    if (videoUrl.startsWith('https://www.dropbox.com')) {
-        videoUrl = videoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-    }
     const mp4Url = videoUrl;
     const outputMp3Path = 'output.mp3';
     const name = 'Alex';
