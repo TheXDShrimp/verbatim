@@ -4,7 +4,7 @@ const openai = new OpenAI(
     process.env.OPENAI_API_KEY
 );
 
-async function summarizeText(text) {
+export default async function summarizeText(text) {
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
@@ -21,17 +21,3 @@ async function summarizeText(text) {
     console.log(completion.choices[0].message);
     return completion.choices[0].message.content;
 }
-
-
-// open ihaveadream.txt and put it into plain text
-//
-
-import fs from 'fs';
-const filePath = 'ihaveadream.txt';
-
-fs.readFile(filePath, 'utf8', function(err, data) {
-    if (err) {
-        return console.log(err);
-    }
-    summarizeText(data).then(console.log);
-});

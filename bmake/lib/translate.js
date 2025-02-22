@@ -2,7 +2,7 @@ const { Translate } = require("@google-cloud/translate").v2;
 
 const translate = new Translate({ key: process.env.GOOGLE_TRANSLATE_KEY });
 
-export async function translateText(text, targetLanguage) {
+export default async function translateText(text, targetLanguage) {
     const [translation] = await translate.translate(text, targetLanguage);
     console.log(`Translated text: ${translation}`);
     return translation;
