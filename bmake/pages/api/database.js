@@ -5,7 +5,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
     
-    const { videoUrl, language, summarize, user } = req.body;
+    const { user } = req.body;
     console.log("User:", user);
 
     const client = new MongoClient(process.env.MONGO_URI);
@@ -13,12 +13,12 @@ export default async function handler(req, res) {
     const db = client.db("speakerize");
     const collection = db.collection("videos");
 
-    // TODO: get output video
-
-    await collection.insertOne({ videoUrl, language, summarize, user: user.email, output: videoUrl });
+    // find all with user.email
+    const videos = await collection.find({ user: user.email }).toArray();
+    console.log("Videos:", videos);
 
     await client.close();
 
-    // return 200 OK
-    return res.status(200).json({ status: "ok" });
+    // return videos
+    return res.status(200).json(videos);
 }

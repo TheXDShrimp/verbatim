@@ -86,7 +86,6 @@ export default function Upload({ user }) {
                     {/* upload button */}
                   <button className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-6 py-3 rounded-xl mt-4"
                     onClick={() => {
-                        console.log(videoUrl, language, summarize);
                         fetch('/api/go', {
                             method: 'POST',
                             headers: {
