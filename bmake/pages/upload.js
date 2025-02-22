@@ -86,14 +86,18 @@ export default function Upload({ user }) {
                     {/* upload button */}
                   <button className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-6 py-3 rounded-xl mt-4"
                     onClick={() => {
-                        fetch('/api/go', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ videoUrl, language, summarize, user })
-                        })
-                    }}  
+                      let updatedVideoUrl = videoUrl;
+                      if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
+                        updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+                      }
+                      fetch('/api/go', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user })
+                      });
+                    }} 
                 >
                     Upload
                   </button>
