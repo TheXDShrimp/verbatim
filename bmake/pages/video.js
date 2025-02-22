@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function VideoPage() {
   const router = useRouter();
-//   const { videoUrl } = router.query;
-  const [videoUrl, setVideoUrl] = useState("https://synchlabs-public.s3.us-west-2.amazonaws.com/david_demo_shortvid-03a10044-7741-4cfc-816a-5bccd392d1ee.mp4");
+  const { videoId } = router.query;
+  const [videoUrl, setVideoUrl] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -16,6 +16,25 @@ export default function VideoPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      const res = await fetch("/api/video", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ videoId }),
+      });
+    
+      const data = await res.json();
+      setVideoUrl(data.videoUrl);
+    };
+
+    if (videoId) {
+      fetchVideo();
+    }
+  }, [videoId]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -47,7 +66,7 @@ export default function VideoPage() {
         //     <source src={videoUrl} type="video/mp4" />
         //     Your browser does not support the video tag.
         //   </video>
-          <iframe src={"https://synchlabs-public.s3.us-west-2.amazonaws.com/david_demo_shortvid-03a10044-7741-4cfc-816a-5bccd392d1ee.mp4"} title="video" />
+          <iframe src={videoUrl} title="video" />
         ) : (
           <p className="text-2xl">No video URL provided</p>
         )}

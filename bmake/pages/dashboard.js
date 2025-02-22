@@ -72,7 +72,7 @@ export default function Dashboard({ user }) {
                   </h1>
                   <div className="grid grid-cols-3 gap-4">
                       {videos.map((video) => (
-                          <Link key={video._id} className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-md text-gray-500" href={`/video?q=${video._id}`}>
+                          <Link key={video._id} className="flex flex-col items-center justify-center bg-white p-4 rounded-lg shadow-md text-gray-500" href={`/video?videoId=${video._id}`}>
                               <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">{video.videoUrl}</h2>
                               <p className="text-lg">{video.summarize ? "Summarized" : "Not summarized"}</p>
                               <p className="text-lg">{video.language}</p>

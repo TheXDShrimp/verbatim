@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const output = await syncVideo(videoUrl, summarizedText);
     
     console.log("Putting into db:", videoUrl, language, summarize, user.email, output);
-    await collection.insertOne({ videoUrl, language, summarize, user: user.email, output: videoUrl });
+    await collection.insertOne({ videoUrl, language, summarize, user: user.email, output: output });
 
     await client.close();
 
