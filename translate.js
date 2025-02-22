@@ -1,6 +1,6 @@
 const { Translate } = require("@google-cloud/translate").v2;
 
-const translate = new Translate({ key: "AIzaSyBIPmiS-QYMyK8aXabF4whobPb-SVQbP14" });
+const translate = new Translate();
 
 async function translateText(text, targetLanguage) {
     const [translation] = await translate.translate(text, targetLanguage);
