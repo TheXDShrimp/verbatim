@@ -21,7 +21,7 @@ export default function Home({ user }) {
       <div className="absolute top-0 left-0 w-screen">
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold">Sonicsphere</h1>
+          <h1 className="text-2xl font-bold">Speakerize</h1>
         </div>
         <div className="flex items-center space-x-8">
           {user ? (<>
