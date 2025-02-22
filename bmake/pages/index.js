@@ -50,7 +50,7 @@ export default function Home({ user }) {
                       Speakerize
                     </span>
                   </h1>
-                  <p className="text-2xl text-center mt-4">
+                  <p className="text-2xl text-center mt-6">
                     Dub, Sub, and Summarize any video in seconds.
                   </p>
               </div>
