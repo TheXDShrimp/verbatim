@@ -1,4 +1,7 @@
 import { MongoClient } from "mongodb";
+import { translateText } from "../../lib/translate";
+import { summarizeText } from "../../lib/summarize";
+import { generateLipSync } from "@/lib/sync";
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
@@ -13,7 +16,13 @@ export default async function handler(req, res) {
     const db = client.db("speakerize");
     const collection = db.collection("videos");
 
-    // TODO: get output video
+    // TODO: get video to text (ask Pranav Neti)
+
+    const text = '';
+    const translatedText = await translateText(text, language);
+    const summarizedText = summarize ? await summarizeText(translatedText) : translatedText;
+    const output = await generateLipSync(videoUrl, summarizedText);
+    
 
     await collection.insertOne({ videoUrl, language, summarize, user: user.email, output: videoUrl });
 
