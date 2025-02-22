@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.0.2",
-    "next": "15.1.7",
+    "axios": "^1.7.9",
+    "form-data": "^4.0.2",
+    "fs": "^0.0.1-security",
+    "next": "^15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
