@@ -1,12 +1,13 @@
-// const fetch = require('node-fetch');
+import 'dotenv/config';
 
-const API_KEY = 'sk-vqueb-NBTCm5kirwizqpbw.TShtC5IE_Y8fqLT20FQBJYWsczzuZpVN';
+const SYNC_API_KEY = process.env.SYNC_API_KEY;
+console.log('SYNC_API_KEY:', SYNC_API_KEY);
 
-export async function generateLipSync(inputUrl, text) {
+export async function generateLipSync(inputUrl, text, voiceId) {
     const options = {
         method: 'POST',
         headers: {
-            'x-api-key': API_KEY,
+            'x-api-key': SYNC_API_KEY,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -20,7 +21,7 @@ export async function generateLipSync(inputUrl, text) {
                     type: "text",
                     provider: {
                         name: "elevenlabs",
-                        voiceId: "CwhRBWXzGAHq8TQ4Fs17",
+                        voiceId: voiceId,
                         script: text
                     }
                 }
@@ -56,7 +57,7 @@ export async function generateLipSync(inputUrl, text) {
 }
 
 function pollForOutputUrl(id) {
-    const options2 = { method: 'GET', headers: { 'x-api-key': API_KEY } };
+    const options2 = { method: 'GET', headers: { 'x-api-key': SYNC_API_KEY } };
 
     return new Promise((resolve, reject) => {
         const interval = setInterval(async () => {
