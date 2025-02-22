@@ -29,14 +29,14 @@ export async function syncVideo(videoUrl, text) {
     }
 }
 
-let videoUrl = 'https://www.dropbox.com/scl/fi/lcmffmz6pz5sv6t22kvp2/FOXNEWS.mp4?rlkey=6173prvixzn8zvr6i878t68oa&st=2xosyahn&dl=0'
-let text = 'There once was a ship that took to sea, the name of the ship was a large bunch of tea'
+// let videoUrl = 'https://www.dropbox.com/scl/fi/lcmffmz6pz5sv6t22kvp2/FOXNEWS.mp4?rlkey=6173prvixzn8zvr6i878t68oa&st=2xosyahn&dl=0'
+// let text = 'There once was a ship that took to sea, the name of the ship was a large bunch of tea'
 
-syncVideo(videoUrl, text)
-    .then(outputUrl => {
-        console.log('Output URL:', outputUrl);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+// syncVideo(videoUrl, text)
+//     .then(outputUrl => {
+//         console.log('Output URL:', outputUrl);
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
 

@@ -199,7 +199,7 @@ const languages = {
   }
   
 
-export default async function translateText(text, targetLanguage) {
+export async function translateText(text, targetLanguage) {
     const languageCode = languages[targetLanguage.toLowerCase()];
     
     if (!languageCode) {

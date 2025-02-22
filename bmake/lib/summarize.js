@@ -4,7 +4,7 @@ const openai = new OpenAI(
     process.env.OPENAI_API_KEY
 );
 
-export default async function summarizeText(text) {
+export async function summarizeText(text) {
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [

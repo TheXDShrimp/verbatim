@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
-import { translateText } from "../../lib/translate";
-import { summarizeText } from "../../lib/summarize";
-import { generateLipSync } from "@/lib/sync";
+import { translateText } from "../../lib/translate.js";
+import { summarizeText } from "../../lib/summarize.js";
+import { syncVideo } from "@/lib/sync-and-clone";
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
@@ -21,9 +21,9 @@ export default async function handler(req, res) {
     const text = '';
     const translatedText = await translateText(text, language);
     const summarizedText = summarize ? await summarizeText(translatedText) : translatedText;
-    const output = await generateLipSync(videoUrl, summarizedText);
+    const output = await syncVideo(videoUrl, summarizedText);
     
-
+    console.log("Putting into db:", videoUrl, language, summarize, user.email, output);
     await collection.insertOne({ videoUrl, language, summarize, user: user.email, output: videoUrl });
 
     await client.close();
