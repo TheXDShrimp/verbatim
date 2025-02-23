@@ -19,6 +19,7 @@ export default function Upload({ user }) {
     const [videoUrl, setVideoUrl] = useState("");
     const [language, setLanguage] = useState("English");
     const [summarize, setSummarize] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     if (!user) {
         return (
@@ -33,12 +34,12 @@ export default function Upload({ user }) {
       <div className="absolute top-0 left-0 w-screen">
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center space-x-4">
-        <Link href="/" className="text-2xl font-bold">Speakerize</Link>
+        <Link href="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">Verbatim</Link>
         </div>
         <div className="flex items-center space-x-8">
             <Link href="/dashboard" className="text-lg font-semibold hover:text-gray-300">Dashboard</Link>
             <Link href="/upload" className="text-lg font-semibold hover:text-gray-300">Upload</Link>
-            <Link href="/auth/logout" className="text-lg font-semibold hover:text-gray-300">Logout</Link>
+            <Link href="/auth/logout" className="text-lg font-semibold hover:text-red-500">Logout</Link>
         </div>
       </nav>
       </div>
@@ -80,12 +81,12 @@ export default function Upload({ user }) {
                         checked={summarize}
                         onChange={(e) => setSummarize(e.target.checked)}
                         />
-                        <label for="summarize
-                        " className="ml-2">Summarize</label>
+                        <label htmlFor="summarize" className="ml-2">Summarize</label>
                     </div>
                     {/* upload button */}
                   <button className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-6 py-3 rounded-xl mt-4"
                     onClick={() => {
+                      setLoading(true);
                       let updatedVideoUrl = videoUrl;
                       if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
                         updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
@@ -96,11 +97,12 @@ export default function Upload({ user }) {
                           'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user })
-                      });
+                      }).finally(() => setLoading(false));
                     }} 
                 >
                     Upload
                   </button>
+                  {loading && <p className="text-lg mt-4">Uploading video...</p>}
               </div>
             </div>
           </div>

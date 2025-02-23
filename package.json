@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@google-cloud/storage": "^7.15.2",
-    "@google-cloud/translate": "^8.5.0",
-    "openai": "^4.85.3"
-  }
-}
