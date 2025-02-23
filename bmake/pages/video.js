@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -11,8 +11,10 @@ export default function VideoPage() {
   const [output, setOutput] = useState("");
   const [isOriginal, setIsOriginal] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isTimestamp, setIsTimestamp] = useState(false);
   const [queryIndexId, setQueryIndexId] = useState("");
   const [queryVideoId, setQueryVideoId] = useState("");
+  const videoRef = useRef(null);
 
   useEffect(() => {
     setIsChatOpen(isOriginal);
@@ -27,7 +29,7 @@ export default function VideoPage() {
         },
         body: JSON.stringify({ videoId }),
       });
-    
+
       const data = await res.json();
       setVideoUrl(data.videoUrl);
       setOutput(data.output);
@@ -39,6 +41,13 @@ export default function VideoPage() {
       fetchVideo();
     }
   }, [videoId]);
+
+  const formatTime = (timeInSeconds) => {
+    const roundedTime = Math.round(timeInSeconds);
+    const minutes = Math.floor(roundedTime / 60);
+    const seconds = roundedTime % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   const handleGenerateText = async (prompt) => {
     const res = await fetch("/api/querygen", {
@@ -53,11 +62,43 @@ export default function VideoPage() {
     setMessages((prevMessages) => [...prevMessages, ["bot", data.text]]);
   };
 
+  const handleTimestampQuery = async (prompt) => {
+    // Prepend "talking about " if not already present
+    const modifiedPrompt = prompt.includes("talking about") ? prompt : `talking about ${prompt}`;
+
+    const res = await fetch("/api/timestamp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ queryIndexId, prompt: modifiedPrompt, queryVideoId }),
+    });
+
+    const data = await res.json();
+    const formattedStart = formatTime(data.start);
+    const formattedEnd = formatTime(data.end);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      ["bot", <span onClick={() => seekToTime(data.start)} className="cursor-pointer text-blue-500">{`${formattedStart} - ${formattedEnd}`}</span>],
+    ]);
+  };
+
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
       setMessages((prevMessages) => [...prevMessages, ["user", newMessage]]);
-      handleGenerateText(newMessage);
+      if (!isTimestamp) {
+        handleGenerateText(newMessage);
+      } else {
+        handleTimestampQuery(newMessage);
+      }
       setNewMessage("");
+    }
+  };
+
+  const seekToTime = (timeInSeconds) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = timeInSeconds;
+      videoRef.current.play();
     }
   };
 
@@ -71,7 +112,7 @@ export default function VideoPage() {
               Verbatim
             </Link>
           </div>
-  
+
           {/* Right-side elements container */}
           <div
             className={`flex items-center space-x-2 md:space-x-8 transition-all duration-300 ease-in-out ${
@@ -92,7 +133,7 @@ export default function VideoPage() {
                   }`}
                 />
               </div>
-  
+
               {/* Text for Original and Converted */}
               <div className="absolute w-full h-full flex items-center justify-between px-1">
                 <span
@@ -111,7 +152,7 @@ export default function VideoPage() {
                 </span>
               </div>
             </div>
-  
+
             <Link href="/dashboard" className="text-sm md:text-lg font-semibold hover:text-gray-300">
               Dashboard
             </Link>
@@ -124,46 +165,76 @@ export default function VideoPage() {
           </div>
         </nav>
       </div>
-  
+
       {/* Main content wrapper */}
       <div className="flex flex-1 overflow-hidden mt-4">
         {/* Video Container */}
         <div className="flex-1 flex items-center justify-center p-4">
           {isOriginal ? (
             videoUrl ? (
-              <iframe src={videoUrl} title="Original video" className="w-full h-full max-w-4xl max-h-[70vh]" />
+              <video ref={videoRef} src={videoUrl} controls className="w-full h-full max-w-4xl max-h-[70vh]" />
             ) : (
               <p className="text-xl md:text-2xl">No original video URL provided</p>
             )
           ) : (
             output ? (
-              <iframe src={output} title="Converted video" className="w-full h-full max-w-4xl max-h-[70vh]" />
+              <video ref={videoRef} src={output} controls className="w-full h-full max-w-4xl max-h-[70vh]" />
             ) : (
               <p className="text-xl md:text-2xl">No converted video URL provided</p>
             )
           )}
         </div>
-  
+
         {/* Chatbox */}
         <div
           className={`w-1/4 bg-gray-900 text-white flex flex-col border-l border-gray-700 transition-all duration-300 ease-in-out ${
             isChatOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
-          <h2 className="text-xl font-bold p-4">Live Chat</h2>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-xl font-bold">Live Chat</h2>
+            <div
+              className="relative flex items-center w-48 md:w-64 h-10 md:h-14 border-2 border-yellow-400 rounded-full cursor-pointer"
+              onClick={() => setIsTimestamp(!isTimestamp)}
+            >
+              <div className="w-full h-full flex rounded-full transition-all duration-300">
+                <div
+                  className={`w-[calc(50%-8px)] h-[calc(100%-8px)] bg-yellow-400 rounded-full absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out ${
+                    isTimestamp ? 'left-[4px]' : 'left-[calc(50%+4px)]'
+                  }`}
+                />
+              </div>
+              <div className="absolute w-full h-full flex items-center justify-between px-1">
+                <span
+                  className={`w-[calc(50%-8px)] flex items-center justify-center font-semibold ${
+                    isTimestamp ? 'text-black' : 'text-yellow-400'
+                  } transition-all duration-300`}
+                >
+                  Timestamp
+                </span>
+                <span
+                  className={`w-[calc(50%-8px)] flex items-center justify-center font-semibold ${
+                    isTimestamp ? 'text-yellow-400' : 'text-black'
+                  } transition-all duration-300`}
+                >
+                  Query
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="flex-1 overflow-y-auto border-t border-gray-700 p-4">
             {messages.map((msg, index) => (
               <div
                 key={index}
                 className={`p-2 rounded-lg mb-2 w-3/4 ${
-                  msg[0] === 'user' ? 'bg-gray-800 ml-auto' : 'bg-gray-700'
+                  msg[0] === 'user' ? 'bg-gray-800 ml-auto text-right' : 'bg-gray-700'
                 }`}
               >
                 {msg[1]}
               </div>
             ))}
           </div>
-  
+
           <div className="p-4 border-t border-gray-700">
             <div className="flex">
               <input
@@ -186,5 +257,4 @@ export default function VideoPage() {
       </div>
     </div>
   );
-  
 }

@@ -168,14 +168,14 @@ export async function searchQuery(
     operator: "and",
   });
 
-  printPage(searchResults.data, limitResults, desiredVideo);
+  // printPage(searchResults.data, limitResults, desiredVideo);
 
-  while (true) {
-    const page = await searchResults.next();
-    if (page === null) break;
-    else printPage(page, limitResults, desiredVideo);
-  }
-
+  // while (true) {
+  //   const page = await searchResults.next();
+  //   if (page === null) break;
+  //   else printPage(page, limitResults, desiredVideo);
+  // }
+  // console.log("Search results: ", searchResults.data);
   return searchResults.data;
 }
 
