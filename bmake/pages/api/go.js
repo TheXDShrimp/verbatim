@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
   // TODO: get video to text (ask Pranav Neti)
 
-  const text = transcribeAudio(videoUrl);
+  const text = await transcribeAudio(videoUrl);
   const translatedText = await translateText(text, language);
   const summarizedText = summarize
     ? await summarizeText(translatedText)
