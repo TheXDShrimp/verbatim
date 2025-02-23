@@ -39,7 +39,7 @@ export async function deleteVoice(voiceId) {
 }
 
 export async function createVoiceFromMP4(mp4Url, outputMp3Path, name) {
-    const tempMp4Path = 'temp.mp4';
+    const tempMp4Path = './tmp/temp.mp4';
     try {
         console.log('Downloading MP4 from URL:', mp4Url);
         const response = await axios.get(mp4Url, { responseType: 'stream' });

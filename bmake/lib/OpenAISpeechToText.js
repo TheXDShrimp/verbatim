@@ -8,8 +8,8 @@ import { spawn } from "child_process";
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 export async function transcribeAudio(videoUrl) {
-  const tempMp4Path = "openAISTTTemp.mp4";
-  const outputMp3Path = "openAISTTTemp.mp3";
+  const tempMp4Path = "./tmp/openAISTTTemp.mp4";
+  const outputMp3Path = "./tmp/openAISTTTemp.mp3";
   try {
     console.log("Downloading MP4 from URL:", videoUrl);
     const response = await axios.get(videoUrl, { responseType: "stream" });
