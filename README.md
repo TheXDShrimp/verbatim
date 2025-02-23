@@ -51,6 +51,8 @@ Verbatim is an intelligent platform that takes any video, summarizes it for quic
 <!-- GETTING STARTED -->
 ## Pipeline
 
+![alt_text](Boilermake Flowchart.png)
+
 ### Speech-to-Text (STT) – OpenAI Whisper
 
 Function: Converts spoken content from a video into a text transcript.
