@@ -48,12 +48,12 @@ export default function Dashboard({ user }) {
       <div className="absolute top-0 left-0 w-screen">
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center space-x-4">
-        <Link href="/" className="text-2xl font-bold">Verbatim</Link>
+        <Link href="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">Verbatim</Link>
         </div>
         <div className="flex items-center space-x-8">
             <Link href="/dashboard" className="text-lg font-semibold hover:text-gray-300">Dashboard</Link>
             <Link href="/upload" className="text-lg font-semibold hover:text-gray-300">Upload</Link>
-            <Link href="/auth/logout" className="text-lg font-semibold hover:text-gray-300">Logout</Link>
+            <Link href="/auth/logout" className="text-lg font-semibold hover:text-red-500">Logout</Link>
         </div>
       </nav>
       </div>

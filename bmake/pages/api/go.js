@@ -41,7 +41,6 @@ export default async function handler(req, res) {
     console.log("Video Title:", videoTitle);
 
   // TODO: get video to text (ask Pranav Neti)
-
   const text = await transcribeAudio(videoUrl);
   const translatedText = await translateText(text, language);
   const summarizedText = summarize

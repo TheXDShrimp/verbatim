@@ -49,7 +49,7 @@ export default function VideoPage() {
       <div className="w-full z-10">
         <nav className="flex items-center justify-between p-4 shadow-md">
           <div className="flex items-center space-x-4">
-            <Link href="/" className="text-xl md:text-2xl font-bold">
+            <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 text-2xl font-bold">
               Verbatim
             </Link>
           </div>
