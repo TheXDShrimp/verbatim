@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -27,7 +27,7 @@ export default function VideoPage() {
         },
         body: JSON.stringify({ videoId }),
       });
-    
+
       const data = await res.json();
       setVideoUrl(data.videoUrl);
       setOutput(data.output);
@@ -71,7 +71,7 @@ export default function VideoPage() {
               Verbatim
             </Link>
           </div>
-  
+
           {/* Right-side elements container */}
           <div
             className={`flex items-center space-x-2 md:space-x-8 transition-all duration-300 ease-in-out ${
@@ -85,14 +85,14 @@ export default function VideoPage() {
             >
               {/* Background for the switch */}
               <div className="w-full h-full flex rounded-full transition-all duration-300">
-                {/* Toggle pill */}
+                {/* Toggle pill with gradient */}
                 <div
-                  className={`w-[calc(50%-8px)] h-[calc(100%-8px)] bg-yellow-400 rounded-full absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out ${
+                  className={`w-[calc(50%-8px)] h-[calc(100%-8px)] bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out ${
                     isOriginal ? 'left-[4px]' : 'left-[calc(50%+4px)]'
                   }`}
                 />
               </div>
-  
+
               {/* Text for Original and Converted */}
               <div className="absolute w-full h-full flex items-center justify-between px-1">
                 <span
@@ -111,7 +111,7 @@ export default function VideoPage() {
                 </span>
               </div>
             </div>
-  
+
             <Link href="/dashboard" className="text-sm md:text-lg font-semibold hover:text-gray-300">
               Dashboard
             </Link>
@@ -124,7 +124,7 @@ export default function VideoPage() {
           </div>
         </nav>
       </div>
-  
+
       {/* Main content wrapper */}
       <div className="flex flex-1 overflow-hidden mt-4">
         {/* Video Container */}
@@ -143,7 +143,7 @@ export default function VideoPage() {
             )
           )}
         </div>
-  
+
         {/* Chatbox */}
         <div
           className={`w-1/4 bg-gray-900 text-white flex flex-col border-l border-gray-700 transition-all duration-300 ease-in-out ${
@@ -163,7 +163,7 @@ export default function VideoPage() {
               </div>
             ))}
           </div>
-  
+
           <div className="p-4 border-t border-gray-700">
             <div className="flex">
               <input
@@ -186,5 +186,4 @@ export default function VideoPage() {
       </div>
     </div>
   );
-  
 }
