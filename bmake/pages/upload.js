@@ -22,7 +22,7 @@ export default function Upload({ user }) {
   const [summarize, setSummarize] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const router = useRouter();  // Use the router hook for programmatic navigation
 
   if (!user) {
     return (
@@ -35,12 +35,36 @@ export default function Upload({ user }) {
     );
   }
 
+  const handleUpload = async () => {
+    setLoading(true);
+    let updatedVideoUrl = videoUrl;
+    if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
+      updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+    }
+
+    try {
+      await fetch('/api/go', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user }),
+      });
+      // Redirect to the dashboard after successful upload
+      router.push('/dashboard');
+    } catch (error) {
+      console.error("Error uploading video:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-    <Head>
-      <title>Upload</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+      <Head>
+        <title>Upload</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {/* Navbar */}
       <div className="absolute top-0 left-0 w-full">
         <nav className="flex flex-wrap items-center justify-between p-4 md:p-8">
@@ -65,27 +89,34 @@ export default function Upload({ user }) {
           </div>
         </nav>
       </div>
-
-      {/* Main Content */}
-      <main className={`flex min-h-screen flex-col items-center justify-center p-6 md:p-24 ${inter.className}`}>
-        <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-2xl">
+  
+      <main className={`flex min-h-screen flex-col items-center justify-between p-6 md:p-24 ${inter.className}`}>
+        <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-2xl mt-20">
           {/* Video URL input */}
           <div className="w-full relative flex flex-col place-items-center">
             <div className="w-full items-center justify-center">
-              <h1 className="text-4xl md:text-6xl font-bold text-center mb-6">Upload a video</h1>
+              <h1 className="text-4xl md:text-6xl font-bold text-center">Upload a video</h1>
+  
+              {/* Conditional Horizontal GIF container with reserved space */}
+              <div className="w-full h-48 flex justify-center mb-6">
+                {loading && <img src="/loading.gif" alt="GIF" className="h-48 w-[500px]" />}
+              </div>
+  
               {/* Video URL input with updated styling */}
               <input
                 type="text"
                 placeholder="Enter a video URL"
-                className="w-full p-4 rounded-lg text-white bg-gray-800 border-2 border-gray-500 focus:outline-none focus:ring-0"
+                className="w-full p-4 rounded-lg text-white bg-black border-2 border-gray-500 focus:outline-none focus:ring-0 mt-4"
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
               />
+  
               {/* Language dropdown and Summarize toggle switch */}
-              <div className="flex flex-col md:flex-row items-center w-full mt-4 space-y-4 md:space-y-0 md:space-x-4">
+              <div className="flex flex-col md:flex-row items-center w-full mt-6 space-y-4 md:space-y-0 md:space-x-4">
+                {/* Language dropdown */}
                 <div className="relative w-full md:w-[60%]">
                   <select
-                    className="w-full p-4 pr-8 rounded-lg bg-black text-white bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 border-2 border-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 font-bold text-base md:text-lg appearance-none"
+                    className="w-full p-4 pr-8 rounded-lg bg-black text-white border-2 border-gray-500 focus:outline-none font-bold text-base md:text-lg appearance-none"
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
                   >
@@ -118,78 +149,57 @@ export default function Upload({ user }) {
                     <option value="turkish">Turkish</option>
                     <option value="ukrainian">Ukrainian</option>
                   </select>
-                  {/* Custom dropdown icon */}
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-6 h-6 text-white"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                  {/* Dropdown icon ensuring visibility */}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white">
+                    ▼
                   </div>
                 </div>
-                {/* Summarize toggle switch */}
+  
+                {/* Summarize toggle with black background */}
                 <div className="flex items-center justify-center w-full md:w-1/2">
-                  <div className="flex items-center space-x-4">
-                    <div className={`text-base md:text-lg font-bold w-32 text-center ${summarize ? 'text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600' : 'text-gray-200'}`}>
-                      {summarize ? "Summarized" : "Original"}
-                    </div>
-                    {/* Toggle button with updated styling */}
-                    <div className="relative w-16 h-8">
-                      <input
-                        type="checkbox"
-                        id="summarize"
-                        name="summarize"
-                        checked={summarize}
-                        onChange={(e) => setSummarize(e.target.checked)}
-                        className="sr-only"
-                      />
-                      <label
-                        htmlFor="summarize"
-                        className="block w-full h-full bg-black border-2 rounded-full cursor-pointer transition-all duration-300"
-                        style={{
-                          borderColor: summarize ? 'orange' : 'white',
-                          background: 'linear-gradient(to bottom right, black, #1a1a1a)'
-                        }}
-                      >
-                        <span
-                          className={`block w-6 h-6 rounded-full absolute top-1 left-1 transition-all duration-300 transform ${
-                            summarize ? 'translate-x-8 bg-gradient-to-br from-yellow-400 to-orange-600' : 'bg-white'
-                          }`}
-                        ></span>
-                      </label>
+                  <div className="w-full p-4 rounded-lg bg-black border-2 border-gray-500">
+                    <div className="flex items-center space-x-4">
+                      <div className={`text-base md:text-lg font-bold w-32 text-center ${summarize ? 'text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600' : 'text-white'}`}>
+                        {summarize ? "Summarized" : "Original"}
+                      </div>
+                      <div className="relative w-16 h-8">
+                        <input
+                          type="checkbox"
+                          id="summarize"
+                          name="summarize"
+                          checked={summarize}
+                          onChange={(e) => setSummarize(e.target.checked)}
+                          className="sr-only"
+                        />
+                        <label
+                          htmlFor="summarize"
+                          className="block w-full h-full bg-black border-2 rounded-full cursor-pointer transition-all duration-300"
+                          style={{
+                            borderColor: summarize ? 'orange' : 'white',
+                            background: 'linear-gradient(to bottom right, black, #1a1a1a)'
+                          }}
+                        >
+                          <span
+                            className={`block w-6 h-6 rounded-full absolute top-1 left-1 transition-all duration-300 transform ${
+                              summarize ? 'translate-x-8 bg-gradient-to-br from-yellow-400 to-orange-600' : 'bg-white'
+                            }`}
+                          ></span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Upload button */}
+            </div>
+  
+            {/* Upload button centered and made larger */}
+            <div className="flex flex-col items-center justify-center w-full mt-6">
               <button
-                className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-8 py-4 rounded-xl mt-4 hover:from-yellow-500 hover:to-orange-700 transition-all duration-300"
-                onClick={() => {
-                  setLoading(true);
-                  let updatedVideoUrl = videoUrl;
-                  if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
-                    updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-                  }
-                  fetch('/api/go', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user }),
-                  }).finally(() => setLoading(false));
-                }}
+                className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-8 py-4 rounded-xl hover:from-yellow-500 hover:to-orange-700 transition-all duration-300 text-2xl"
+                onClick={handleUpload}
               >
                 Upload
               </button>
-              {loading && <p className="text-lg mt-4">Uploading video...</p>}
             </div>
           </div>
         </div>
