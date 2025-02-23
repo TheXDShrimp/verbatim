@@ -6,7 +6,7 @@
   <h1 align="center"><a href="https://www.getverbatim.tech/">Verbatim</a></h1>
 
   <p align="center">
-    Dub, Sub, and Summarize any video in seconds
+    Dub, Discover, and Query any video in seconds!
     <br />
     <a href="https://devpost.com/software/speakify-jg3nqf"><strong>Devpost »</strong></a>
     <br />
