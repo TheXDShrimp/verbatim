@@ -59,6 +59,7 @@ export default function Dashboard({ user }) {
       <div className="absolute top-0 left-0 w-screen">
         <nav className="flex items-center justify-between p-8">
           <div className="flex items-center space-x-4">
+            <img src="/favicon.ico" alt="Logo" className="w-8 h-8 md:w-10 md:h-10" />
             <Link
               href="/"
               className="text-[32px] font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600"
