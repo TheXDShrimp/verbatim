@@ -49,6 +49,31 @@ export async function downloadAndUploadYoutubeVideo(
     console.error("Error downloading video:", error);
   }
 }
+// -----------------------------> UPLOAD VIDEO WITH VIDEO URL <-----------------------------------
+export async function uploadVideoFromUrl(videoUrl, indexId) {
+  try {
+    console.log("Uploading to Twelve Labs...");
+    const task = await client.task.create({
+      indexId: indexId,
+      file: videoUrl,
+    });
+    console.log(`Task id=${task.id} Video id=${task.videoId}`);
+
+    await task.waitForDone(500, (task) => {
+      console.log(`Status=${task.status}`);
+    });
+
+    if (task.status !== "ready") {
+      throw new Error(`Indexing failed with status ${task.status}`);
+    }
+
+    console.log(`The unique identifier of your video is ${task.videoId}`);
+    return task.videoId;
+  } catch (error) {
+    console.error("Error during video upload:", error);
+  }
+}
+
 
 // -----------------------------> UPLOAD VIDEO FROM LOCAL (local file) <--------------------------
 
