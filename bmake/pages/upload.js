@@ -80,7 +80,7 @@ export default function Upload({ user }) {
               <div className="flex flex-col md:flex-row items-center w-full mt-4 space-y-4 md:space-y-0 md:space-x-4">
                 <div className="relative w-full md:w-1/2">
                   <select
-                    className="w-full p-4 rounded-lg bg-black text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 border-2 border-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 font-bold text-base md:text-lg"
+                    className="w-full p-4 rounded-lg bg-black text-white bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 border-2 border-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 font-bold text-base md:text-lg"
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
                   >
