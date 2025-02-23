@@ -4,7 +4,6 @@ import { summarizeText } from "../../lib/summarize.js";
 import { syncVideo } from "@/lib/sync-and-clone";
 import { createModel, uploadVideoFromUrl, generateMetadata, formatTime, generateText, searchQuery } from "@/lib/TwelveLabsVideo";
 import { transcribeAudio } from "@//lib/OpenAISpeechToText";
-import { youtubeCaptions } from "@//lib/YoutubeCaptions";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -26,23 +25,25 @@ export default async function handler(req, res) {
     console.log("Query Model IDs:", query_models);
 
     // Check if data is empty and create a new model if necessary
+    let queryIndexId;
     if (query_models.length === 0) {
         console.log("No query models found, creating a new model...");
-        const queryIndexId = await createModel(`Model_${user.email}`);
+        queryIndexId = (await createModel(`MyModel_${user.email}`));
+        queryIndexId = queryIndexId.id;
         query_collection.insertOne({ user: user.email, indexId: queryIndexId });
-        console.log("New model created:", newModel);
     } else {
         console.log("Query models found, using existing model...");
-        const queryIndexId = query_models[0].indexId;
+        queryIndexId = query_models[0].indexId;
     }
 
-    const queryVideoId = await uploadVideoFromUrl(videoUrl);
-    const videoTitle = (await generateMetadata(queryVideoId)).title;
+    console.log("Upload video from URL:", videoUrl);
+    const queryVideoId = await uploadVideoFromUrl(videoUrl, queryIndexId);
+    let videoTitle = await generateMetadata(queryVideoId);
+    videoTitle = videoTitle.title;
     console.log("Video Title:", videoTitle);
 
-  // TODO: get video to text (ask Pranav Neti)
-
-  const text = transcribeAudio(videoUrl);
+    // Generate text from video
+  const text = await transcribeAudio(videoUrl);
   const translatedText = await translateText(text, language);
   const summarizedText = summarize
     ? await summarizeText(translatedText)

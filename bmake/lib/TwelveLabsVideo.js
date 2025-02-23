@@ -55,7 +55,7 @@ export async function uploadVideoFromUrl(videoUrl, indexId) {
     console.log("Uploading to Twelve Labs...");
     const task = await client.task.create({
       indexId: indexId,
-      file: videoUrl,
+      url: videoUrl,
     });
     console.log(`Task id=${task.id} Video id=${task.videoId}`);
 
@@ -217,6 +217,9 @@ function printPage(searchData, limitResults, desiredVideo) {
 //   "67ba1e3a0cb7e370a801cd73",
 //   "10"
 // );
+
+uploadVideoFromUrl('https://dl.dropboxusercontent.com/scl/fi/1uk1ne6xd2bvna7tcpaiy/Trump-Talking-Made-with-Clipchamp.mp4?rlkey=yswxavfajf4hhx9835yhtbwrl&st=9crhks0c&dl=0',
+  '67ba890e0cb7e370a801dd13');
 
 // generateMetadata("67ba2b5a589f15770cd95290");
 
