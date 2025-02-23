@@ -67,7 +67,7 @@ export default function Upload({ user }) {
           {/* Video URL input */}
           <div className="w-full relative flex flex-col place-items-center">
             <div className="w-full items-center justify-center">
-              <h1 className="text-4xl md:text-6xl font-bold text-center mb-4">Upload a video</h1>
+              <h1 className="text-4xl md:text-6xl font-bold text-center mb-6">Upload a video</h1>
               {/* Video URL input with updated styling */}
               <input
                 type="text"
@@ -114,9 +114,6 @@ export default function Upload({ user }) {
                     <option value="ukrainian">Ukrainian</option>
                   </select>
                   {/* Dropdown icon with gradient */}
-                  <span className="absolute right-4 top-4 text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">
-                    ▼
-                  </span>
                 </div>
                 {/* Summarize toggle switch */}
                 <div className="flex items-center justify-center w-full md:w-1/2">
