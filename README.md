@@ -77,11 +77,11 @@ Function: Animates a speaker’s face to match the translated and summarized tex
 
 How It Works: Sync.so uses deep learning to generate realistic lip movements that match the audio. It can be used to create localized versions of videos in multiple languages.
 
-### User Q&A Interface – OpenAI GPT Chat
+### User Q&A Interface – TwelveLabs API
 
 Function: Allows users to ask questions about the video content and receive context-aware responses.
 
-How It Works: GPT stores the transcript and summary as context, allowing real-time semantic search and natural conversation.
+How It Works: TwelveLabs stores vector embeddings of the video and speech in the video as context, allowing real-time semantic search and natural conversation.
 
 
 ## MLH Technologies
