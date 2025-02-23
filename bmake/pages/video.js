@@ -113,7 +113,9 @@ export default function VideoPage() {
       <div className="w-full z-10">
         <nav className="flex items-center justify-between p-4 shadow-md">
           <div className="flex items-center space-x-4">
-            <img src="/favicon.ico" alt="Logo" className="w-8 h-8 md:w-10 md:h-10" />
+            <Link href="/">
+              <img src="/favicon.ico" alt="Logo" className="w-8 h-8 md:w-10 md:h-10" />
+            </Link>
             <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 text-2xl font-bold">
               Verbatim
             </Link>
