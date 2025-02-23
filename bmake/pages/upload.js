@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Upload({ user }) {
     const [videoUrl, setVideoUrl] = useState("");
-    const [language, setLanguage] = useState("english");
+    const [language, setLanguage] = useState("English");
     const [summarize, setSummarize] = useState(false);
 
     if (!user) {

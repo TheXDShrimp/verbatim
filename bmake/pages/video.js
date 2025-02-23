@@ -39,28 +39,28 @@ export default function VideoPage() {
 
   return (
     <div className="flex h-screen w-screen">
-
-        {/* navbar */}
-          <div className="absolute top-0 left-0 w-3/4">
-      <nav className="flex items-center justify-between p-8">
-        <div className="flex items-center space-x-4">
-          <Link href="/" className="text-2xl font-bold">Speakerize</Link>
-        </div>
-        <div className="flex items-center space-x-8">
-            <Link href="/dashboard" className="text-lg font-semibold hover:text-gray-300">Dashboard</Link>
-            <Link href="/upload" className="text-lg font-semibold hover:text-gray-300">Upload</Link>
-            <Link href="/auth/logout" className="text-lg font-semibold hover:text-gray-300">Logout</Link>
-        </div>
-      </nav>
+      {/* navbar */}
+      <div className="absolute top-0 left-0 w-3/4">
+        <nav className="flex items-center justify-between p-8">
+          <div className="flex items-center space-x-4">
+            <Link href="/" className="text-2xl font-bold">Speakerize</Link>
+          </div>
+          <div className="flex items-center space-x-8">
+              <Link href="/dashboard" className="text-lg font-semibold hover:text-gray-300">Dashboard</Link>
+              <Link href="/upload" className="text-lg font-semibold hover:text-gray-300">Upload</Link>
+              <Link href="/auth/logout" className="text-lg font-semibold hover:text-gray-300">Logout</Link>
+          </div>
+        </nav>
       </div>
+
       {/* Video Container */}
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 items-center justify-center w-full px-12">
         {output ? (
         //   <video className="w-3/4 h-auto" controls>
         //     <source src={videoUrl} type="video/mp4" />
         //     Your browser does not support the video tag.
         //   </video>
-          <iframe src={output} title="video" />
+          <iframe src={output} title="video" className="w-full h-full"/>
         ) : (
           <p className="text-2xl">No video URL provided</p>
         )}
