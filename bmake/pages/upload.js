@@ -34,7 +34,7 @@ export default function Upload({ user }) {
       <div className="absolute top-0 left-0 w-screen">
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center space-x-4">
-        <Link href="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">Verbatim</Link>
+        <Link href="/" className="text-[32px] font-bold text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">Verbatim</Link>
         </div>
         <div className="flex items-center space-x-8">
             <Link href="/dashboard" className="text-lg font-semibold hover:text-gray-300">Dashboard</Link>
@@ -70,10 +70,34 @@ export default function Upload({ user }) {
                         value={language}
                         onChange={(e) => setLanguage(e.target.value)}
                     >
+                        <option value="arabic">Arabic</option>
+                        <option value="bulgarian">Bulgarian</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="croatian">Croatian</option>
+                        <option value="czech">Czech</option>
+                        <option value="danish">Danish</option>
+                        <option value="dutch">Dutch</option>
                         <option value="english">English</option>
-                        <option value="spanish">Spanish</option>
+                        <option value="finnish">Finnish</option>
                         <option value="french">French</option>
                         <option value="german">German</option>
+                        <option value="greek">Greek</option>
+                        <option value="hindi">Hindi</option>
+                        <option value="indonesian">Indonesian</option>
+                        <option value="italian">Italian</option>
+                        <option value="japanese">Japanese</option>
+                        <option value="korean">Korean</option>
+                        <option value="malay">Malay</option>
+                        <option value="polish">Polish</option>
+                        <option value="portuguese">Portuguese</option>
+                        <option value="romanian">Romanian</option>
+                        <option value="russian">Russian</option>
+                        <option value="slovak">Slovak</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="swedish">Swedish</option>
+                        <option value="tamil">Tamil</option>
+                        <option value="turkish">Turkish</option>
+                        <option value="ukrainian">Ukrainian</option>
                     </select>
                     {/* checkbox */}
                     <div className="flex items-center mt-4">
