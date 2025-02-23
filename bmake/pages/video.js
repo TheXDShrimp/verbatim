@@ -153,7 +153,7 @@ export default function VideoPage() {
                     isOriginal ? 'text-black' : 'text-yellow-400'
                   } transition-all duration-300`}
                 >
-                  Original
+                  Q&A
                 </span>
               </div>
             </div>
@@ -237,14 +237,14 @@ export default function VideoPage() {
                     isTimestamp ? 'text-black' : 'text-yellow-400'
                   } transition-all duration-300`}
                 >
-                  Timestamp
+                  Search Topic
                 </span>
                 <span
                   className={`w-[calc(50%-8px)] flex items-center justify-center font-semibold ${
                     isTimestamp ? 'text-yellow-400' : 'text-black'
                   } transition-all duration-300`}
                 >
-                  Query
+                  Chat
                 </span>
               </div>
             </div>
