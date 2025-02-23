@@ -21,7 +21,7 @@ export default function Home({ user }) {
       <div className="absolute top-0 left-0 w-screen">
       <nav className="flex items-center justify-between p-8">
         <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold">Speakerize</h1>
+          <h1 className="text-2xl font-bold">Verbatim</h1>
         </div>
         <div className="flex items-center space-x-8">
           {user ? (<>
@@ -47,7 +47,7 @@ export default function Home({ user }) {
                   <h1 className="text-8xl font-bold text-center">
                     Welcome to <br />
                     <span className="text-transparent text-9xl bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">
-                      Speakerize
+                      Verbatim
                     </span>
                   </h1>
                   <p className="text-2xl text-center mt-6">
