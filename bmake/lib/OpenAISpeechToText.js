@@ -8,9 +8,9 @@ import { spawn } from "child_process";
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 export async function transcribeAudio(videoUrl) {
+  const tempMp4Path = "openAISTTTemp.mp4";
+  const outputMp3Path = "openAISTTTemp.mp3";
   try {
-    const tempMp4Path = "openAISTTTemp.mp4";
-    const outputMp3Path = "openAISTTTemp.mp3";
     console.log("Downloading MP4 from URL:", videoUrl);
     const response = await axios.get(videoUrl, { responseType: "stream" });
     const mp4Stream = response.data;
@@ -26,37 +26,30 @@ export async function transcribeAudio(videoUrl) {
 
     console.log("Extracting audio from MP4...");
     await new Promise((resolve, reject) => {
-      const ffmpegProcess = spawn(ffmpegPath, [
-        "-i",
-        tempMp4Path,
-        "-vn",
-        "-acodec",
-        "libmp3lame",
-        outputMp3Path,
-      ]);
+      const ffmpegProcess = spawn(ffmpegPath, ['-i', tempMp4Path, '-vn', '-acodec', 'libmp3lame', outputMp3Path]);
 
-      let ffmpegError = "";
+      let ffmpegError = '';
 
-      ffmpegProcess.stderr.on("data", (data) => {
-        ffmpegError += data.toString();
+      ffmpegProcess.stderr.on('data', (data) => {
+          ffmpegError += data.toString();
       });
 
-      ffmpegProcess.on("close", (code) => {
-        if (code === 0) {
-          console.log("Audio extraction completed");
-          resolve();
-        } else {
-          console.error("FFmpeg process exited with code", code);
-          console.error("FFmpeg error output:", ffmpegError);
-          reject(new Error(`FFmpeg process exited with code ${code}`));
-        }
+      ffmpegProcess.on('close', (code) => {
+          if (code === 0) {
+              console.log('Audio extraction completed');
+              resolve();
+          } else {
+              console.error('FFmpeg process exited with code', code);
+              console.error('FFmpeg error output:', ffmpegError);
+              reject(new Error(`FFmpeg process exited with code ${code}`));
+          }
       });
 
-      ffmpegProcess.on("error", (err) => {
-        console.error("Error during audio extraction:", err);
-        reject(err);
+      ffmpegProcess.on('error', (err) => {
+          console.error('Error during audio extraction:', err);
+          reject(err);
       });
-    });
+  });
 
     console.log("Audio extracted successfully to:", outputMp3Path);
 
