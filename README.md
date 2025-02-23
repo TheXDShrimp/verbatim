@@ -49,7 +49,7 @@ Verbatim is an intelligent platform that takes any video, summarizes it for quic
 
 
 <!-- GETTING STARTED -->
-## Technologies
+## Pipeline
 
 ### Speech-to-Text (STT) – OpenAI Whisper
 
@@ -80,6 +80,17 @@ How It Works: Sync.so uses deep learning to generate realistic lip movements tha
 Function: Allows users to ask questions about the video content and receive context-aware responses.
 
 How It Works: GPT stores the transcript and summary as context, allowing real-time semantic search and natural conversation.
+
+
+## MLH Technologies
+
+### MongoDB
+
+MongoDB was used to store user data, video metadata, and generated content. It was also used to store the video transcript, summary, and translations.
+
+### Auth0
+
+Auth0 was used for user authentication and authorization. It was used to secure user data and ensure that only authenticated users could access the platform.
 
 <!-- CONTACT -->
 ## Contact
