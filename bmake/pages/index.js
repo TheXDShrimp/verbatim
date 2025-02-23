@@ -72,7 +72,7 @@ export default function Home({ user }) {
                 </span>
               </h1>
               <p className="text-[clamp(16px,2.5vw,24px)] mt-6">
-                Dub, Sub, and Summarize any video in seconds.
+                Dub, Discover, and Query any video in seconds.
               </p>
             </div>
           </div>
