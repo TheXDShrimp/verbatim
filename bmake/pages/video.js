@@ -126,9 +126,9 @@ export default function VideoPage() {
             >
               {/* Background for the switch */}
               <div className="w-full h-full flex rounded-full transition-all duration-300">
-                {/* Toggle pill */}
+                {/* Toggle pill with gradient */}
                 <div
-                  className={`w-[calc(50%-8px)] h-[calc(100%-8px)] bg-yellow-400 rounded-full absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out ${
+                  className={`w-[calc(50%-8px)] h-[calc(100%-8px)] bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out ${
                     isOriginal ? 'left-[4px]' : 'left-[calc(50%+4px)]'
                   }`}
                 />

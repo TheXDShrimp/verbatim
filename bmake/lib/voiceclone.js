@@ -7,7 +7,6 @@ import { ElevenLabsClient } from "elevenlabs";
 import 'dotenv/config';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
-console.log('ELEVENLABS_API_KEY:', ELEVENLABS_API_KEY);
 const client = new ElevenLabsClient({ apiKey: ELEVENLABS_API_KEY });
 ffmpeg.setFfmpegPath(ffmpegPath);
 

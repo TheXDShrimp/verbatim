@@ -83,9 +83,10 @@ export default function Dashboard({ user }) {
                 {videos.map((video) => (
                   <Link
                     key={video._id}
-                    className="flex flex-col items-center justify-center bg-opacity-90 
+                    className="flex flex-col items-center justify-center bg-opacity-90
                               hover:bg-gray-600 transition-all duration-300 
-                              p-4 rounded-lg shadow-md text-center border-2 border-gray-500"
+                              p-4 rounded-lg shadow-md text-center border-2 border-gray-500
+                              hover:border-transparent"
                     href={`/video?videoId=${video._id}`}
                   >
                     <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-yellow-400 to-orange-600">
