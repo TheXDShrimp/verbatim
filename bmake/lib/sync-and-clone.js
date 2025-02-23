@@ -3,7 +3,7 @@ import { createVoiceFromMP4, deleteVoice } from "./voiceclone.js";
 
 export async function syncVideo(videoUrl, text) {
     const mp4Url = videoUrl;
-    const outputMp3Path = './tmp/output.mp3';
+    const outputMp3Path = '../tmp/output.mp3';
     const name = 'Alex';
 
     let voiceId;
