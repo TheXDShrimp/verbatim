@@ -43,6 +43,10 @@ export default function Dashboard({ user }) {
           </div>
       );
   }
+
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
   
   return (
     <>
@@ -92,8 +96,8 @@ export default function Dashboard({ user }) {
                     <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-yellow-400 to-orange-600">
                       {video.videoTitle}
                     </h2>
-                    <p className="text-lg text-gray-200">{video.summarize ? "Summarized" : "Not summarized"}</p>
-                    <p className="text-lg text-gray-200">{video.language}</p>
+                    <p className="text-lg text-gray-200">{video.summarize ? "Summarized" : "Not Summarized"}</p>
+                    <p className="text-lg text-gray-200">{capitalizeFirstLetter(video.language)}</p>
                   </Link>
                 ))}
               </div>
