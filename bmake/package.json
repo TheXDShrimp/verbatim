@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.0.2",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@google-cloud/translate": "^8.5.0",
     "axios": "^1.7.9",
     "child_process": "^1.0.2",
