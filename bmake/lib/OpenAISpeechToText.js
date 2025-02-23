@@ -2,7 +2,7 @@ import fs from "fs";
 import OpenAI from "openai";
 import "dotenv/config";
 import axios from "axios";
-import ffmpegPath from "ffmpeg-static";
+const ffmpegPath = require('ffmpeg-static');
 import { spawn } from "child_process";
 
 const path = require("path");

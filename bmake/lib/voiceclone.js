@@ -1,6 +1,6 @@
 import axios from "axios";
 import ffmpeg from 'fluent-ffmpeg';
-import ffmpegPath from 'ffmpeg-static';
+const ffmpegPath = require('ffmpeg-static');
 import fs from 'fs';
 import { spawn } from 'child_process';
 import { ElevenLabsClient } from "elevenlabs";
