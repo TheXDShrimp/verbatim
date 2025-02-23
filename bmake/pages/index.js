@@ -20,7 +20,7 @@ export default function Home({ user }) {
     <>
       <Head>
         <title>Verbatim</title>
-        <meta name="description" content="Dub, Sub, and Summarize any video in seconds." />
+        <meta name="description" content="Dub, Discover, and Query any video in seconds." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* Navbar */}
