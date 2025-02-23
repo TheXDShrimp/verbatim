@@ -11,6 +11,8 @@ export default function VideoPage() {
   const [output, setOutput] = useState("");
   const [isOriginal, setIsOriginal] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(true);
+  const [queryIndexId, setQueryIndexId] = useState("");
+  const [queryVideoId, setQueryVideoId] = useState("");
 
   useEffect(() => {
     setIsChatOpen(isOriginal);
@@ -29,6 +31,8 @@ export default function VideoPage() {
       const data = await res.json();
       setVideoUrl(data.videoUrl);
       setOutput(data.output);
+      setQueryIndexId(data.queryIndexId);
+      setQueryVideoId(data.queryVideoId);
     };
 
     if (videoId) {
@@ -36,9 +40,23 @@ export default function VideoPage() {
     }
   }, [videoId]);
 
+  const handleGenerateText = async (prompt) => {
+    const res = await fetch("/api/querygen", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ queryVideoId, prompt }),
+    });
+
+    const data = await res.json();
+    setMessages((prevMessages) => [...prevMessages, ["bot", data.text]]);
+  };
+
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
-      setMessages([...messages, ["user", newMessage]]);
+      setMessages((prevMessages) => [...prevMessages, ["user", newMessage]]);
+      handleGenerateText(newMessage);
       setNewMessage("");
     }
   };
@@ -49,7 +67,7 @@ export default function VideoPage() {
       <div className="w-full z-10">
         <nav className="flex items-center justify-between p-4 shadow-md">
           <div className="flex items-center space-x-4">
-            <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 text-[32px] font-bold">
+            <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 text-2xl font-bold">
               Verbatim
             </Link>
           </div>
