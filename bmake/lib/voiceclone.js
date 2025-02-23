@@ -6,6 +6,10 @@ import { spawn } from 'child_process';
 import { ElevenLabsClient } from "elevenlabs";
 import 'dotenv/config';
 
+const path = require("path");
+const os = require("os");
+
+
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const client = new ElevenLabsClient({ apiKey: ELEVENLABS_API_KEY });
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -39,7 +43,7 @@ export async function deleteVoice(voiceId) {
 }
 
 export async function createVoiceFromMP4(mp4Url, outputMp3Path, name) {
-    const tempMp4Path = '../tmp/temp.mp4';
+    const tempMp4Path = path.join(os.tmpdir(), 'temp.mp4');
     try {
         console.log('Downloading MP4 from URL:', mp4Url);
         const response = await axios.get(mp4Url, { responseType: 'stream' });

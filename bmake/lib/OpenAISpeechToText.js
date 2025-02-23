@@ -5,11 +5,14 @@ import axios from "axios";
 import ffmpegPath from "ffmpeg-static";
 import { spawn } from "child_process";
 
+const path = require("path");
+const os = require("os");
+
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
 export async function transcribeAudio(videoUrl) {
-  const tempMp4Path = "../tmp/openAISTTTemp.mp4";
-  const outputMp3Path = "../tmp/openAISTTTemp.mp3";
+  const tempMp4Path = path.join(os.tmpdir(), 'openAISTTTemp.mp4');
+  const outputMp3Path = path.join(os.tmpdir(), 'openAISTTTemp.mp3');
   try {
     console.log("Downloading MP4 from URL:", videoUrl);
     const response = await axios.get(videoUrl, { responseType: "stream" });
