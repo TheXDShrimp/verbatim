@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <h1 align="center">Verbatim</h1>
+  <h1 href="https://www.getverbatim.tech/" align="center">Verbatim</h1>
 
   <p align="center">
     Dub, Sub, and Summarize any video in seconds
