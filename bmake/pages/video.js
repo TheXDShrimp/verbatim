@@ -8,6 +8,7 @@ export default function VideoPage() {
   const [videoUrl, setVideoUrl] = useState("");
   const [messages, setMessages] = useState([["bot", "Welcome to the chat!"]]);
   const [newMessage, setNewMessage] = useState("");
+  const [output, setOutput] = useState("");
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -21,6 +22,7 @@ export default function VideoPage() {
     
       const data = await res.json();
       setVideoUrl(data.videoUrl);
+      setOutput(data.output);
     };
 
     if (videoId) {
@@ -53,12 +55,12 @@ export default function VideoPage() {
       </div>
       {/* Video Container */}
       <div className="flex flex-1 items-center justify-center">
-        {videoUrl ? (
+        {output ? (
         //   <video className="w-3/4 h-auto" controls>
         //     <source src={videoUrl} type="video/mp4" />
         //     Your browser does not support the video tag.
         //   </video>
-          <iframe src={videoUrl} title="video" />
+          <iframe src={output} title="video" />
         ) : (
           <p className="text-2xl">No video URL provided</p>
         )}
