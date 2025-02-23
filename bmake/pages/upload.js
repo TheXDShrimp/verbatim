@@ -3,6 +3,8 @@ import Link from "next/link";
 import {Inter} from "next/font/google";
 import { useState } from "react";
 
+import { useRouter } from "next/router";
+
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req, context.res);
 
@@ -20,6 +22,8 @@ export default function Upload({ user }) {
     const [language, setLanguage] = useState("English");
     const [summarize, setSummarize] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
 
     if (!user) {
         return (
@@ -121,7 +125,10 @@ export default function Upload({ user }) {
                           'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user })
-                      }).finally(() => setLoading(false));
+                      }).finally(() => {
+                        setLoading(false);
+                        router.push({ pathname: '/dashboard'});
+                      });
                     }} 
                 >
                     Upload
