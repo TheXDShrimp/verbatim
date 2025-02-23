@@ -78,9 +78,9 @@ export default function Upload({ user }) {
               />
               {/* Language dropdown and Summarize toggle switch */}
               <div className="flex flex-col md:flex-row items-center w-full mt-4 space-y-4 md:space-y-0 md:space-x-4">
-                <div className="relative w-full md:w-1/2">
+                <div className="relative w-full md:w-[60%]">
                   <select
-                    className="w-full p-4 rounded-lg bg-black text-white bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 border-2 border-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 font-bold text-base md:text-lg"
+                    className="w-full p-4 pr-8 rounded-lg bg-black text-white bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600 border-2 border-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 font-bold text-base md:text-lg appearance-none"
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
                   >
@@ -113,7 +113,21 @@ export default function Upload({ user }) {
                     <option value="turkish">Turkish</option>
                     <option value="ukrainian">Ukrainian</option>
                   </select>
-                  {/* Dropdown icon with gradient */}
+                  {/* Custom dropdown icon */}
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 {/* Summarize toggle switch */}
                 <div className="flex items-center justify-center w-full md:w-1/2">
@@ -149,6 +163,7 @@ export default function Upload({ user }) {
                   </div>
                 </div>
               </div>
+
               {/* Upload button */}
               <button
                 className="bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-bold px-8 py-4 rounded-xl mt-4 hover:from-yellow-500 hover:to-orange-700 transition-all duration-300"
