@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
     // find all with user.email
     const videos = await collection.find({ user: user.email }).toArray();
-    console.log("Videos:", videos);
+    // console.log("Videos:", videos);
 
     await client.close();
 
