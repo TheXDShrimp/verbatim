@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function VideoPage() {
   const router = useRouter();
@@ -102,6 +103,11 @@ export default function VideoPage() {
   };
 
   return (
+    <>
+    <Head>
+      <title>Video</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
     <div className="flex flex-col h-screen w-screen">
       {/* Navbar */}
       <div className="w-full z-10">
@@ -274,5 +280,6 @@ export default function VideoPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

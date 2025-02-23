@@ -1,6 +1,7 @@
 import { auth0 } from "@/lib/auth";
 import Link from "next/link";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req, context.res);
@@ -17,6 +18,11 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home({ user }) {
   return (
     <>
+      <Head>
+        <title>Verbatim</title>
+        <meta name="description" content="Dub, Sub, and Summarize any video in seconds." />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {/* Navbar */}
       <div className="absolute top-0 left-0 w-screen">
         <nav className="flex items-center justify-between p-8">

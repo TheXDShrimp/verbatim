@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req, context.res);
@@ -36,6 +37,10 @@ export default function Upload({ user }) {
 
   return (
     <>
+    <Head>
+      <title>Upload</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
       {/* Navbar */}
       <div className="absolute top-0 left-0 w-full">
         <nav className="flex flex-wrap items-center justify-between p-4 md:p-8">

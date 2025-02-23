@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     }
     
     const { user } = req.body;
-    console.log("User:", user);
+    // console.log("User:", user);
 
     const client = new MongoClient(process.env.MONGO_URI);
     await client.connect();
