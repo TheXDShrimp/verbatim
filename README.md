@@ -10,7 +10,7 @@
     <br />
     <a href="https://devpost.com/software/speakify-jg3nqf"><strong>Devpost »</strong></a>
     ·
-    <a href="https://youtu.be/vjST1c2uO9o"><strong>YouTube Demo»</strong></a>
+    <a href="https://youtu.be/vjST1c2uO9o"><strong>YouTube Demo »</strong></a>
     <br />
     <br />
     <a href="https://www.linkedin.com/in/chenhsonny/">Sonny Chen</a>
