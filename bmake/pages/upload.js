@@ -111,10 +111,6 @@ export default function Upload({ user }) {
             duration: 5000,
             isClosable: true,
           });
-          // Route to dashboard iff in upload right now
-          if (router.pathname === '/upload') {
-            router.push('/dashboard');
-          }
         } else {
           toast({
             title: "Processing failed",
@@ -134,9 +130,6 @@ export default function Upload({ user }) {
           duration: 5000,
           isClosable: true,
         });
-        if (router.pathname === '/upload') {
-            router.push('/dashboard');
-        }
       } else {
         // Handle error
         throw new Error(data.error || 'Unknown error occurred');
