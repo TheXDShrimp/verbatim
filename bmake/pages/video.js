@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 
+export const maxDuration = 300;
+
 export default function VideoPage() {
   const router = useRouter();
   const { videoId } = router.query;

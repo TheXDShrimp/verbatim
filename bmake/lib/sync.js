@@ -65,7 +65,7 @@ function pollForOutputUrl(id) {
                 const response = await fetch(`https://api.sync.so/v2/generate/${id}`, options2);
                 const jsonResponse = await response.json();
                 if (jsonResponse.status && (jsonResponse.status === 'PENDING' || jsonResponse.status === 'PROCESSING')) {
-                    console.log('Still processing, waiting...');
+                    // console.log('Still processing, waiting...');
                 } else {
                     console.log('Output URL:', jsonResponse.outputUrl);
                     clearInterval(interval);

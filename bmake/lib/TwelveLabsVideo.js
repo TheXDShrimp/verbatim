@@ -59,7 +59,7 @@ export async function uploadVideoFromUrl(videoUrl, indexId) {
     });
     console.log(`Task id=${task.id} Video id=${task.videoId}`);
 
-    await task.waitForDone(2000, (task) => {
+    await task.waitForDone(10000, (task) => {
       console.log(`Status=${task.status}`);
     });
 
