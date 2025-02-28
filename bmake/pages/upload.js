@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import toast, { Toaster } from 'react-hot-toast';
 
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req, context.res);
@@ -14,6 +15,44 @@ export async function getServerSideProps(context) {
   };
 }
 
+async function pollJobStatus(jobId, user, maxAttempts = 500) {
+  let attempt = 0;
+  
+  while (attempt < maxAttempts) {
+    attempt++;
+    console.log(`Checking job status, attempt ${attempt}...`);
+    
+    // Wait between polling attempts
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
+    try {
+      // Check job status
+      const response = await fetch('/api/go', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jobId, user }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'COMPLETED') {
+        return { success: true, outputUrl: data.outputUrl };
+      } else if (data.status === 'ERROR') {
+        return { success: false, error: data.error };
+      }
+      // If still processing, continue the loop
+    } catch (error) {
+      console.error("Error checking job status:", error);
+      // Continue polling despite errors
+    }
+  }
+  
+  // If we reach here, we've exceeded max attempts
+  return { success: false, error: 'Timeout: Job processing took too long' };
+}
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Upload({ user }) {
@@ -21,6 +60,8 @@ export default function Upload({ user }) {
   const [language, setLanguage] = useState("English");
   const [summarize, setSummarize] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState("");
 
   const router = useRouter();  // Use the router hook for programmatic navigation
 
@@ -41,19 +82,69 @@ export default function Upload({ user }) {
     if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
       updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
     }
-
+  
     try {
-      await fetch('/api/go', {
+      // Initial submission
+      const response = await fetch('/api/go', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ videoUrl: updatedVideoUrl, language, summarize, user }),
       });
-      // Redirect to the dashboard after successful upload
-      router.push('/dashboard');
+      
+      const data = await response.json();
+      
+      if (data.status === 'PROCESSING' && data.jobId) {        
+        // Option 2: Poll here and show progress
+        setProcessing(true); // You'd need to add this state
+        setProgress("Processing video..."); // You'd need to add this state
+        
+        const result = await pollJobStatus(data.jobId, user);
+        setProcessing(false);
+        
+        if (result.success) {
+          toast({
+            title: "Processing completed",
+            description: "Your video has been successfully processed.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          router.push('/dashboard');
+        } else {
+          toast({
+            title: "Processing failed",
+            description: result.error || "An unknown error occurred",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+        
+      } else if (data.status === 'COMPLETED') {
+        // Unlikely on first call, but handle it anyway
+        toast({
+          title: "Processing completed",
+          description: "Your video has been successfully processed.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        router.push('/dashboard');
+      } else {
+        // Handle error
+        throw new Error(data.error || 'Unknown error occurred');
+      }
     } catch (error) {
       console.error("Error uploading video:", error);
+      toast({
+        title: "Error",
+        description: "There was an error processing your video. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }

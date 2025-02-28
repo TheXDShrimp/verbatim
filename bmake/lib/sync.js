@@ -49,33 +49,50 @@ export async function generateLipSync(inputUrl, text, voiceId) {
         const jsonResponse = await response.json();
         const id = jsonResponse.id;
         console.log('Response ID:', id);
-        return await pollForOutputUrl(id);
+        
+        // Instead of waiting for the complete result, return the ID immediately
+        return { 
+            id: id,
+            status: 'PENDING'
+        };
     } catch (err) {
         console.error('Fetch error:', err);
         throw err;
     }
 }
 
-function pollForOutputUrl(id) {
-    const options2 = { method: 'GET', headers: { 'x-api-key': SYNC_API_KEY } };
+// This function now checks once and returns the current status
+export async function checkSyncStatus(id) {
+    const options = { 
+        method: 'GET', 
+        headers: { 'x-api-key': SYNC_API_KEY } 
+    };
 
-    return new Promise((resolve, reject) => {
-        const interval = setInterval(async () => {
-            try {
-                const response = await fetch(`https://api.sync.so/v2/generate/${id}`, options2);
-                const jsonResponse = await response.json();
-                if (jsonResponse.status && (jsonResponse.status === 'PENDING' || jsonResponse.status === 'PROCESSING')) {
-                    // console.log('Still processing, waiting...');
-                } else {
-                    console.log('Output URL:', jsonResponse.outputUrl);
-                    clearInterval(interval);
-                    resolve(jsonResponse.outputUrl);
-                }
-            } catch (err) {
-                console.error('Fetch error:', err);
-                clearInterval(interval);
-                reject(err);
-            }
-        }, 5000); // Poll every 5 seconds
-    });
+    try {
+        const response = await fetch(`https://api.sync.so/v2/generate/${id}`, options);
+        const jsonResponse = await response.json();
+        
+        if (jsonResponse.status && (jsonResponse.status === 'PENDING' || jsonResponse.status === 'PROCESSING')) {
+            return { 
+                status: jsonResponse.status,
+                complete: false
+            };
+        } else if (jsonResponse.outputUrl) {
+            console.log('Output URL:', jsonResponse.outputUrl);
+            return {
+                status: 'COMPLETED',
+                complete: true,
+                outputUrl: jsonResponse.outputUrl
+            };
+        } else {
+            return {
+                status: 'ERROR',
+                complete: true,
+                error: jsonResponse
+            };
+        }
+    } catch (err) {
+        console.error('Fetch error:', err);
+        throw err;
+    }
 }
