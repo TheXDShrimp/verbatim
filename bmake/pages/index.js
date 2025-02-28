@@ -6,8 +6,6 @@ import Head from "next/head";
 export async function getServerSideProps(context) {
   const session = await auth0.getSession(context.req, context.res);
 
-  // wait 3-5 seconds for the session to load
-  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return {
     props: {
