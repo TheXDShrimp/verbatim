@@ -99,6 +99,11 @@ export default function Home({ user }) {
               <p className="text-[clamp(16px,2.5vw,24px)] mt-6">
                 Understand your video, Verbatim.
               </p>
+              <p className="text-[clamp(16px,2.5vw,24px)] mt-6">
+                <a href="https://youtu.be/LGS8Pe7L3Gw" className="inline-block px-6 py-3 bg-gradient-to-br from-yellow-400 to-orange-600 text-white font-semibold text-lg rounded-md hover:bg-orange-700">
+                  Check Out Our Demo!
+                </a>
+              </p>
             </div>
           </div>
         </div>
