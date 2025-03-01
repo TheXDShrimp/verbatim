@@ -1,5 +1,5 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+// import { createRequire } from "module";
+// const require = createRequire(import.meta.url);
 const { Translate } = require("@google-cloud/translate").v2;
 
 const translate = new Translate({ key: process.env.GOOGLE_TRANSLATE_KEY });
