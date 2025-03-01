@@ -74,6 +74,63 @@ export async function uploadVideoFromUrl(videoUrl, indexId) {
   }
 }
 
+// Split the upload function into two parts - start and check status
+export async function startVideoUpload(videoUrl, indexId) {
+  try {
+    console.log("Starting upload to Twelve Labs...");
+    const task = await client.task.create({
+      indexId: indexId,
+      url: videoUrl,
+    });
+    console.log(`Task id=${task.id} Video id=${task.videoId}`);
+    
+    // Return the task info immediately rather than waiting
+    return {
+      taskId: task.id,
+      videoId: task.videoId,
+      status: "pending"
+    };
+  } catch (error) {
+    console.error("Error starting video upload:", error);
+    throw error;
+  }
+}
+
+export async function checkVideoUploadStatus(taskId) {
+  try {
+    // Get the current task status
+    const task = await client.task.retrieve(taskId);
+    console.log(`Status=${task.status}`);
+    
+    if (task.status === "ready") {
+      // Upload is complete
+      return {
+        taskId: task.id,
+        videoId: task.videoId,
+        status: "completed"
+      };
+    } else if (task.status === "failed") {
+      // Upload failed
+      return {
+        taskId: task.id,
+        videoId: task.videoId,
+        status: "failed",
+        error: "Indexing failed"
+      };
+    } else {
+      // Still processing
+      return {
+        taskId: task.id,
+        videoId: task.videoId,
+        status: "pending"
+      };
+    }
+  } catch (error) {
+    console.error("Error checking video upload status:", error);
+    throw error;
+  }
+}
+
 
 // -----------------------------> UPLOAD VIDEO FROM LOCAL (local file) <--------------------------
 

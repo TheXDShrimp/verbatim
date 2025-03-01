@@ -15,44 +15,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-async function pollJobStatus(jobId, user, maxAttempts = 500) {
-  let attempt = 0;
-  
-  while (attempt < maxAttempts) {
-    attempt++;
-    console.log(`Checking job status, attempt ${attempt}...`);
-    
-    // Wait between polling attempts
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    
-    try {
-      // Check job status
-      const response = await fetch('/api/go', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jobId, user }),
-      });
-      
-      const data = await response.json();
-      
-      if (data.status === 'COMPLETED') {
-        return { success: true, outputUrl: data.outputUrl };
-      } else if (data.status === 'ERROR') {
-        return { success: false, error: data.error };
-      }
-      // If still processing, continue the loop
-    } catch (error) {
-      console.error("Error checking job status:", error);
-      // Continue polling despite errors
-    }
-  }
-  
-  // If we reach here, we've exceeded max attempts
-  return { success: false, error: 'Timeout: Job processing took too long' };
-}
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Upload({ user }) {
@@ -62,12 +24,14 @@ export default function Upload({ user }) {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState("");
+  const [currentStage, setCurrentStage] = useState("");
+  const [progressPercentage, setProgressPercentage] = useState(0);
 
   const router = useRouter();  // Use the router hook for programmatic navigation
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen w-screen">
+      <div className="flex flex-col items-center justify-center h-screen w-screen bg-black">
         <h1 className="text-4xl font-bold">You need to be logged in to access this page.</h1>
         <Link href="/auth/login" className="text-lg font-semibold hover:text-gray-300">
           Login
@@ -78,6 +42,11 @@ export default function Upload({ user }) {
 
   const handleUpload = async () => {
     setLoading(true);
+    setProcessing(true);
+    setProgress("Starting video processing...");
+    setCurrentStage("INIT");
+    setProgressPercentage(5);
+    
     let updatedVideoUrl = videoUrl;
     if (updatedVideoUrl.startsWith('https://www.dropbox.com')) {
       updatedVideoUrl = updatedVideoUrl.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
@@ -95,13 +64,9 @@ export default function Upload({ user }) {
       
       const data = await response.json();
       
-      if (data.status === 'PROCESSING' && data.jobId) {        
-        // Option 2: Poll here and show progress
-        setProcessing(true); // You'd need to add this state
-        setProgress("Processing video..."); // You'd need to add this state
-        
+      if (data.status === 'PROCESSING' && data.jobId) {
+        // Begin polling the job status
         const result = await pollJobStatus(data.jobId, user);
-        setProcessing(false);
         
         if (result.success) {
           toast({
@@ -120,7 +85,6 @@ export default function Upload({ user }) {
             isClosable: true,
           });
         }
-        
       } else if (data.status === 'COMPLETED') {
         // Unlikely on first call, but handle it anyway
         toast({
@@ -130,6 +94,7 @@ export default function Upload({ user }) {
           duration: 5000,
           isClosable: true,
         });
+        router.push('/dashboard');
       } else {
         // Handle error
         throw new Error(data.error || 'Unknown error occurred');
@@ -145,8 +110,70 @@ export default function Upload({ user }) {
       });
     } finally {
       setLoading(false);
+      setProcessing(false);
     }
   };
+
+  const pollJobStatus = async(jobId, user, maxAttempts = 1000) => {
+    let attempt = 0;
+    
+    while (attempt < maxAttempts) {
+      attempt++;
+      
+      // Wait between polling attempts
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      try {
+        // Check job status
+        const response = await fetch('/api/go', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ jobId, user }),
+        });
+        
+        const data = await response.json();
+        
+        // Update progress in UI
+        if (data.progress) {
+          setProgress(data.progress);
+        }
+        
+        if (data.currentStage) {
+          setCurrentStage(data.currentStage);
+          
+          // Update progress percentage based on stage
+          switch (data.currentStage) {
+            case "UPLOAD":
+              setProgressPercentage(20);
+              break;
+            case "TRANSCRIBE":
+              setProgressPercentage(40);
+              break;
+            case "SYNC":
+              setProgressPercentage(60);
+              break;
+          }
+        }
+        
+        if (data.status === 'COMPLETED') {
+          setProgressPercentage(100);
+          setProgress("Processing complete!");
+          return { success: true, outputUrl: data.outputUrl };
+        } else if (data.status === 'ERROR') {
+          return { success: false, error: data.error };
+        }
+        // If still processing, continue the loop
+      } catch (error) {
+        console.error("Error checking job status:", error);
+        // Continue polling despite errors
+      }
+    }
+    
+    // If we reach here, we've exceeded max attempts
+    return { success: false, error: 'Timeout: Job processing took too long' };
+  }
 
   return (
     <>
@@ -155,7 +182,7 @@ export default function Upload({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* Navbar */}
-      <div className="absolute top-0 left-0 w-full">
+      <div className="absolute top-0 left-0 w-full bg-black">
         <nav className="flex flex-wrap items-center justify-between p-4 md:p-8">
           <div className="flex items-center space-x-4">
             <Link href="/">
@@ -179,7 +206,7 @@ export default function Upload({ user }) {
         </nav>
       </div>
   
-      <main className={`flex min-h-screen flex-col items-center justify-between p-6 md:p-24 ${inter.className}`}>
+      <main className={`flex min-h-screen flex-col items-center justify-between p-6 md:p-24 bg-black ${inter.className}`}>
         <div className="flex flex-col items-center justify-center space-y-8 w-full max-w-2xl mt-20">
           {/* Video URL input */}
           <div className="w-full relative flex flex-col place-items-center">
@@ -190,6 +217,17 @@ export default function Upload({ user }) {
               <div className="w-full h-48 flex justify-center mb-6">
                 {loading && <img src="/loading.gif" alt="GIF" className="h-48 w-[500px]" />}
               </div>
+
+              {/* Progress bar */}
+              {processing && (
+                <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
+                  <div
+                    className="bg-gradient-to-br from-yellow-400 to-orange-600 h-4 rounded-full"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
+                  <div className="text-center text-white mt-2">{progress} ({progressPercentage}%)</div>
+                </div>
+              )}
   
               {/* Video URL input with updated styling */}
               <input
