@@ -50,14 +50,14 @@ export default function Dashboard({ user }) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  const deleteVideo = async (videoId) => {
+  const deleteVideo = async (videoId, queryVideoId) => {
     try {
       const res = await fetch('/api/delete-video', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoId }),
+        body: JSON.stringify({ videoId, user, queryVideoId }),
       });
 
       if (res.ok) {
@@ -129,7 +129,7 @@ export default function Dashboard({ user }) {
                       <p className="text-lg text-gray-200">{capitalizeFirstLetter(video.language)}</p>
                     </Link>
                     <button
-                      onClick={() => deleteVideo(video._id)}
+                      onClick={() => deleteVideo(video._id, video.queryVideoId)}
                       className="absolute bottom-4 left-4 p-2 bg-gray-600 text-white rounded-full opacity-50 group-hover:opacity-100 group-hover:bg-red-600 transition-all duration-300"
                     >
                       <FaTrash />

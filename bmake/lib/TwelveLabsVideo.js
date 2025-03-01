@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { TwelveLabs } from "twelvelabs-js";
+import { TwelveLabs, ConflictError } from "twelvelabs-js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { translateText, detectLanguage } from "../lib/translate.js";
@@ -159,6 +159,23 @@ export async function uploadVideo(videoPath, indexId) {
   }
 }
 
+export async function deleteVideo(indexId, videoId, retryCount = 100) {
+  try {
+    const task = await client.index.video.delete(indexId, videoId);
+    console.log('Delete task result:', task);
+    return task;
+  } catch (error) {
+    if (error instanceof ConflictError && retryCount > 0) {
+      console.log(`Video ${videoId} is still processing. Retrying...`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      return deleteVideo(indexId, videoId, retryCount - 1);
+    } else {
+      console.log(`Video ${videoId} is still processing after multiple retries.`);
+      return undefined;
+    }
+  }
+}
+
 // ------------> GENERATE A TITLE, AND RELATED DETAILS (USE TO TAG VIDEOS IN UI) <---------------
 export async function generateMetadata(videoId) {
   const gist = await client.generate.gist(videoId, [
@@ -294,6 +311,8 @@ function printPage(searchData, limitResults, desiredVideo) {
 // generateChapters("67ba1ef151e07a2910a9c51a");
 
 // generateText("67ba2efd589f15770cd95291", "What is topology?");
+
+// deleteVideo("67ba1e3a0cb7e370a801cd73", "67ba2b5a589f15770cd95290");
 
 // searchQuery(
 //   "67ba1e3a0cb7e370a801cd73",
