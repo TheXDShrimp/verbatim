@@ -2,6 +2,8 @@ import "dotenv/config";
 import { TwelveLabs } from "twelvelabs-js";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { translateText, detectLanguage } from "../lib/translate.js";
+
 
 const twelvelabs_api_key = process.env.TWELVELABS_API_KEY;
 const client = new TwelveLabs({ apiKey: twelvelabs_api_key });
@@ -83,12 +85,12 @@ export async function startVideoUpload(videoUrl, indexId) {
       url: videoUrl,
     });
     console.log(`Task id=${task.id} Video id=${task.videoId}`);
-    
+
     // Return the task info immediately rather than waiting
     return {
       taskId: task.id,
       videoId: task.videoId,
-      status: "pending"
+      status: "pending",
     };
   } catch (error) {
     console.error("Error starting video upload:", error);
@@ -101,13 +103,13 @@ export async function checkVideoUploadStatus(taskId) {
     // Get the current task status
     const task = await client.task.retrieve(taskId);
     console.log(`Status=${task.status}`);
-    
+
     if (task.status === "ready") {
       // Upload is complete
       return {
         taskId: task.id,
         videoId: task.videoId,
-        status: "completed"
+        status: "completed",
       };
     } else if (task.status === "failed") {
       // Upload failed
@@ -115,14 +117,14 @@ export async function checkVideoUploadStatus(taskId) {
         taskId: task.id,
         videoId: task.videoId,
         status: "failed",
-        error: "Indexing failed"
+        error: "Indexing failed",
       };
     } else {
       // Still processing
       return {
         taskId: task.id,
         videoId: task.videoId,
-        status: "pending"
+        status: "pending",
       };
     }
   } catch (error) {
@@ -130,7 +132,6 @@ export async function checkVideoUploadStatus(taskId) {
     throw error;
   }
 }
-
 
 // -----------------------------> UPLOAD VIDEO FROM LOCAL (local file) <--------------------------
 
@@ -206,9 +207,19 @@ export async function generateChapters(videoId) {
 
 // --------------> QUESTIONS QUERY NOT STREAMING (formated output for questions) <---------------
 export async function generateText(videoId, prompt) {
+  const promptLang = await detectLanguage(prompt);
   const text = await client.generate.text(videoId, prompt);
+  const responseLang = await detectLanguage(text.data);
   console.log(text.data);
-  return text.data;
+
+  if(promptLang === responseLang) {
+    return text.data;
+  }
+
+  else {
+    const translatedResponse = await translateText(text.data, promptLang);
+    return translatedResponse;
+  }
 }
 
 // --------------> SEARCH FOR TEXT QUERIES (find time stamps of intrest) <-----------------

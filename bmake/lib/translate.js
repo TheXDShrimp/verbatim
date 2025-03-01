@@ -1,3 +1,5 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 const { Translate } = require("@google-cloud/translate").v2;
 
 const translate = new Translate({ key: process.env.GOOGLE_TRANSLATE_KEY });
@@ -212,8 +214,24 @@ export async function translateText(text, targetLanguage) {
     return translation;
 }
 
+function getLanguageNameFromCode(code) {
+    return Object.keys(languages).find(key => languages[key] === code) || "english";
+}
+
+export async function detectLanguage(text) {
+    let detections = await translate.detect(text);
+    detections = Array.isArray(detections) ? detections : [detections];
+    if(detections.length != 0) {
+        console.log(getLanguageNameFromCode(detections[0].language));
+        return getLanguageNameFromCode(detections[0].language);
+    }
+
+    else {
+        return "english";
+    }
+}
+
 // Example usage
 // translateText("Dear Professor Gray, do you love my work?", "fr").then(console.log);
-
 
 // use this to find language ids: https://cloud.google.com/translate/docs/languages
