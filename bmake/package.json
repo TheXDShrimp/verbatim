@@ -34,6 +34,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
     "twelvelabs-js": "^0.4.4",
     "youtube-transcript": "^1.2.1"
   },
